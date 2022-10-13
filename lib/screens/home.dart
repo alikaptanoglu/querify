@@ -3,6 +3,7 @@ import 'package:json_table/json_table.dart';
 import 'package:query_generator/api/gpt3.dart';
 import 'package:query_generator/constants/strings.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:query_generator/screens/result.dart';
 import 'dart:convert';
 
 import '../constants/images.dart';
@@ -50,12 +51,39 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(
             width: 5,
           ),
-          IconButton(
-              onPressed: () {},
-              icon: const FaIcon(
-                FontAwesomeIcons.ellipsisVertical,
-                color: Colors.white,
-              )),
+          PopupMenuButton(
+              itemBuilder: (context) {
+                return [
+                  const PopupMenuItem(
+                    value: "About",
+                    child: Text("About"),
+                  ),
+                ];
+              },
+              padding: EdgeInsets.zero,
+              offset: const Offset(20, 60),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              onSelected: (value) {
+                if (value == "About") {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text("About Querify"),
+                          content: const Text(CustomText.aboutQuerify),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Close"))
+                          ],
+                        );
+                      });
+                }
+              }),
         ],
       ),
       body: Padding(
@@ -135,23 +163,17 @@ class _HomePageState extends State<HomePage> {
                       exResult = exData;
                     });
                     jsonTable = jsonDecode(exResult);
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => QueryResult(
+                          jsonTable: jsonTable,
+                        ),
+                      ),
+                    );
                   },
                   child: Text("Execute Query")),
-              //if (jsonTable.isNotEmpty) show json table
-              if (jsonTable.isNotEmpty)
-                Expanded(
-                  child: JsonTable(
-                    jsonTable,
-                    showColumnToggle: true,
-                    allowRowHighlight: true,
-                    rowHighlightColor: Colors.yellow[500]!.withOpacity(0.7),
-                    paginationRowCount: 20,
-                    onRowSelect: (index, map) {
-                      print(index);
-                      print(map);
-                    },
-                  ),
-                ),
             ],
           ),
         ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:query_generator/screens/result.dart';
 import 'package:query_generator/screens/home.dart';
 
 void main() => runApp(const MyApp());

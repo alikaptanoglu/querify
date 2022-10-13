@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:json_table/json_table.dart';
 
 import '../widgets/searchbar.dart';
 
 class QueryResult extends StatefulWidget {
-  var generatedQuery;
-
-  QueryResult(@required this.generatedQuery);
-
   @override
   State<QueryResult> createState() => _QueryResultState();
+
+  var jsonTable;
+
+  QueryResult({this.jsonTable});
 }
 
 class _QueryResultState extends State<QueryResult> {
@@ -39,22 +40,28 @@ class _QueryResultState extends State<QueryResult> {
               )),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            FaIcon(
-              FontAwesomeIcons.search,
-              size: 100,
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              "Execute query to show result",
-              style: TextStyle(fontSize: 20),
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Expanded(
+                    child: JsonTable(
+                      widget.jsonTable,
+                      showColumnToggle: true,
+                      allowRowHighlight: true,
+                      rowHighlightColor: Colors.yellow[500]!.withOpacity(0.7),
+                      paginationRowCount: 30,
+                      onRowSelect: (index, map) {
+                        print(index);
+                        print(map);
+                      },
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
